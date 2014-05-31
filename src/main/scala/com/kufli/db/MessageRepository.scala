@@ -7,15 +7,18 @@ import com.github.mauricio.async.db.util.ExecutorServiceUtils.CachedExecutionCon
 
 /*CREATE TABLE messages
 (
-  id bigserial NOT NULL,
-  content character varying(255) NOT NULL,
-  moment date NOT NULL,
-  CONSTRAINT bigserial_column_pkey PRIMARY KEY (id )
+  `GUID` CHAR(36) NOT NULL,
+  id INTEGER NOT NULL,
+  content BLOB NOT NULL,
+  timestamp DATE NOT NULL,
+  PRIMARY KEY (`GUID`),
+  INDEX `messages_id` (`id`),
+  INDEX `messages_timeStamp` (`timestamp`)
 );*/
 
 object MessageRepository {
-  val Insert = "INSERT INTO messages (content,moment) VALUES (?,?) RETURNING id"
-  val Update = "UPDATE messages SET content = ?, moment = ? WHERE id = ?"
+  val Insert = "INSERT INTO messages (guid, id, content,timestamp) VALUES (?,?,?,?)"
+  val Update = "UPDATE messages SET content = ?, moment = ? WHERE guid = ?"
   val SelectOne = "SELECT id, content, moment FROM messages WHERE id = ?"
 }
 
@@ -24,12 +27,15 @@ class MessageRepository(pool: Connection) {
   import MessageRepository._
 
   def save(m: Message): Future[Message] = {
-    m.id match {
-      case Some(id) => pool.sendPreparedStatement(Update, Array(m.content, m.moment, id)).map {
+    m.guid match {
+      case Some(guid) => pool.sendPreparedStatement(Update, Array(m.content, m.timestamp, guid)).map {
         queryResult => m
       }
-      case None => pool.sendPreparedStatement(Insert, Array(m.content, m.moment)).map {
-        queryResult => new Message(Some(queryResult.rows.get(0)("id").asInstanceOf[Long]), m.content, m.moment)
+      case None => {
+        val guid = java.util.UUID.randomUUID.toString
+        pool.sendPreparedStatement(Insert, Array(guid, m.id, m.content, m.timestamp)).map {
+          queryResult => new Message(Some(guid), m.id, m.content, m.timestamp)
+        }
       }
     }
   }
@@ -48,8 +54,9 @@ class MessageRepository(pool: Connection) {
 
   private def rowToMessage(row: RowData): Message = {
     new Message(
-      id = Some(row("id").asInstanceOf[Long]),
+      guid = Some(row("guid").asInstanceOf[String]),
+      id = row("id").asInstanceOf[Long],
       content = row("content").asInstanceOf[String],
-      moment = row("moment").asInstanceOf[LocalDate])
+      timestamp = row("timestamp").asInstanceOf[LocalDate])
   }
 }

@@ -10,7 +10,7 @@ scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
 resolvers ++= Seq(
   "spray repo" at "http://repo.spray.io/",
-  "Gamlor-Repo" at "https://github.com/gamlerhart/gamlor-mvn/raw/master/snapshots"
+  "Gamlor-Repo" at "https://github.com/gamlerhart/gamlor-mvn/raw/master/snapshots"  
 )
 
 libraryDependencies ++= {
@@ -25,8 +25,9 @@ libraryDependencies ++= {
     "org.json4s" %% "json4s-native" % "3.2.9",
     "org.json4s" %% "json4s-jackson" % "3.2.9",
     "com.github.nscala-time" %% "nscala-time" % "1.0.0",
-    "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2",
+    "org.slf4j" % "slf4j-log4j12" % "1.7.7",
+    "ch.qos.logback" % "logback-classic" % "1.1.2",    
     "com.rabbitmq" % "amqp-client" % "3.3.1",
-    "com.github.mauricio" % "mysql-async_2.10" % "0.2.13"
+    "com.github.mauricio" % "mysql-async_2.10" % "0.2.13"    
   )
 }

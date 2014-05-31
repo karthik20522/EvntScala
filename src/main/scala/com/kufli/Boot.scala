@@ -7,8 +7,10 @@ import com.kufli.amqp._
 import com.kufli.db.DBConnection
 import scala.util.Try
 
-object Main {
-  def main(args: Array[String]) {
+object EvntScala extends App {
+  sys addShutdownHook (shutdown)
+
+  override def main(args: Array[String]) {
     val system = ActorSystem("evntScala")
 
     val amqpChannel = AMQPConnection.getConnection().createChannel()
@@ -19,10 +21,10 @@ object Main {
     val amqpSender = system.actorOf(Props(new AMQPSenderActor("evntEx", "public.evnt.scala", amqpChannel)), name = "amqpSender")
     val messageHandler = system.actorOf(Props(new MessageHandlerActor(amqpSender)), name = "messageHandler")
     val amqpListener = system.actorOf(Props(new AMQPListenerActor("evntQ", amqpChannel, messageHandler)), name = "amqpListener")
+  }
 
-    /*Try{
-      DBConnection.close
-      AMQPConnection.close
-    }*/
+  private def shutdown {
+    DBConnection.close
+    AMQPConnection.close
   }
 }
