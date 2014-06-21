@@ -9,11 +9,7 @@ import scala.util.Try
 import com.kufli.common.Logging
 
 object EvntScala extends App with Logging {
-  sys addShutdownHook (shutdown)
-
   override def main(args: Array[String]) {
-    log.debug("HELLO WORLD")
-    println("HELLLLLLL PRINTLN")
     val system = ActorSystem("evntScala")
 
     val amqpChannel = AMQPConnection.getConnection().createChannel()
@@ -24,10 +20,5 @@ object EvntScala extends App with Logging {
     val amqpSender = system.actorOf(Props(new AMQPSenderActor("evntEx", "public.evnt.scala", amqpChannel)), name = "amqpSender")
     val messageHandler = system.actorOf(Props(new MessageHandlerActor(amqpSender)), name = "messageHandler")
     val amqpListener = system.actorOf(Props(new AMQPListenerActor("evntQ", amqpChannel, messageHandler)), name = "amqpListener")
-  }
-
-  private def shutdown {
-    DBConnection.close
-    AMQPConnection.close
   }
 }

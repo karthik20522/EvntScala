@@ -8,7 +8,7 @@ trait ReceiveLogger {
 
   def logMessage: Receive = new Receive {
     def isDefinedAt(x: Any) = {
-      log.debug(s"Sender: ${sender.path.toString()} | Message -> $x")
+      log.debug(s"\nSender -> ${sender.path.toString()}\nMessage -> $x\n")
       false
     }
     def apply(x: Any) = throw EvntScalaException.create("Unsupported Operation", new UnsupportedOperationException)
