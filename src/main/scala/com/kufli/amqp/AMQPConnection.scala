@@ -4,7 +4,6 @@ import com.rabbitmq.client.Connection
 import com.rabbitmq.client.ConnectionFactory
 import com.typesafe.config.ConfigFactory
 import com.rabbitmq.client.Channel
-import com.kufli.common.Logging
 
 object AMQPConnectionConfig {
   private val config = ConfigFactory.load()
@@ -12,7 +11,7 @@ object AMQPConnectionConfig {
   val RABBITMQ_HOST = config.getString("rabbitmq.uri")
 }
 
-object AMQPConnection extends Logging {
+object AMQPConnection {
   private val connection: Connection = null
 
   /**

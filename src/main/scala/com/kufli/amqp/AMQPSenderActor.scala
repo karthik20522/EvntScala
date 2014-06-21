@@ -3,9 +3,9 @@ package com.kufli.amqp
 import akka.actor._
 import com.rabbitmq.client.{ QueueingConsumer, Channel }
 import akka.event.LoggingReceive
-import com.kufli.common.ReceiveLogger
+import com.kufli.log.ReceiveLogger
 import com.kufli.common.EvntScalaException
-import com.kufli.common.Logging
+import com.kufli.log.Logging
 
 class AMQPSenderActor(exchangeName: String, routingKey: String, sendingChannel: Channel) extends Actor with ReceiveLogger with Logging {
 

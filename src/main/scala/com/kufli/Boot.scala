@@ -6,7 +6,7 @@ import com.kufli.handler.MessageHandlerActor
 import com.kufli.amqp._
 import com.kufli.db.DBConnection
 import scala.util.Try
-import com.kufli.common.Logging
+import com.kufli.log.Logging
 
 object EvntScala extends App with Logging {
   override def main(args: Array[String]) {

@@ -2,11 +2,10 @@ package com.kufli.amqp
 
 import akka.actor._
 import com.rabbitmq.client.{ QueueingConsumer, Channel }
-import com.kufli.common.ReceiveLogger
+import com.kufli.log.ReceiveLogger
 import com.kufli.common.EvntScalaException
-import com.kufli.common.Logging
 
-class AMQPListenerActor(queueName: String, listeningChannel: Channel, msgHandler: ActorRef) extends Actor with Logging {
+class AMQPListenerActor(queueName: String, listeningChannel: Channel, msgHandler: ActorRef) extends Actor {
 
   override def preStart = self ! "init"
 

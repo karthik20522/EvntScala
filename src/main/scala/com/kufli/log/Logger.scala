@@ -1,7 +1,14 @@
-package com.kufli.common
+package com.kufli.log
 
 import org.slf4j.{ Logger => Slf4jLogger, LoggerFactory }
 import org.slf4j.spi.{ LocationAwareLogger => Slf4jLocationAwareLogger }
+import org.slf4j.{Logger => Slf4jLogger}
+import org.slf4j.spi.{LocationAwareLogger => Slf4jLocationAwareLogger}
+import org.slf4j.spi.LocationAwareLogger.DEBUG_INT
+import org.slf4j.spi.LocationAwareLogger.ERROR_INT
+import org.slf4j.spi.LocationAwareLogger.INFO_INT
+import org.slf4j.spi.LocationAwareLogger.TRACE_INT
+import org.slf4j.spi.LocationAwareLogger.WARN_INT
 
 /**
  * Factory for concrete Logger instances

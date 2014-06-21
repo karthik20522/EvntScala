@@ -1,7 +1,7 @@
-package com.kufli.common
+package com.kufli.log
 
 import akka.actor.Actor
-import akka.actor.ActorLogging
+import com.kufli.common.EvntScalaException
 
 trait ReceiveLogger {
   this: Actor with Logging =>

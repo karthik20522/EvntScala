@@ -1,4 +1,4 @@
-package com.kufli.common
+package com.kufli.log
 
 /**
  * Mixin trait with a single `log` member providing a simple logging API

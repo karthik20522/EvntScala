@@ -4,9 +4,9 @@ import akka.actor.Actor
 import com.kufli.amqp.MQMessage
 import akka.actor.ActorRef
 import akka.actor.ActorLogging
-import com.kufli.common.ReceiveLogger
+import com.kufli.log.ReceiveLogger
 import com.kufli.common.EvntScalaException
-import com.kufli.common.Logging
+import com.kufli.log.Logging
 
 class MessageHandlerActor(amqpAckActor: ActorRef) extends Actor with ReceiveLogger with Logging {
 

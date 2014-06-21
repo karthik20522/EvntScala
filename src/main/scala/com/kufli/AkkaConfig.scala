@@ -7,7 +7,7 @@ import com.amazonaws.services.ec2.AmazonEC2Client
 import com.typesafe.config.{ ConfigValueFactory, ConfigFactory }
 import scala.collection.JavaConversions._
 import com.kufli.ec2._
-import com.kufli.common.Logging
+import com.kufli.log.Logging
 
 object AkkaConfig extends Logging {
 

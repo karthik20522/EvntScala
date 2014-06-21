@@ -4,7 +4,6 @@ import com.typesafe.config.ConfigFactory
 import com.github.mauricio.async.db.Configuration
 import com.github.mauricio.async.db.mysql.pool.MySQLConnectionFactory
 import com.github.mauricio.async.db.pool._
-import com.kufli.common.Logging
 
 object DBConnection {
   private val config = ConfigFactory.load().getConfig("db")
