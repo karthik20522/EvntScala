@@ -5,16 +5,18 @@ import com.rabbitmq.client.{ QueueingConsumer, Channel }
 import com.kufli.log.ReceiveLogger
 import com.kufli.common.EvntScalaException
 
-class AMQPListenerActor(queueName: String, listeningChannel: Channel, msgHandler: ActorRef) extends Actor {
+class AMQPListenerActor(queueName: String, listeningChannel: Channel, msgHandler: ActorRef) extends Actor with IAMQPListener {
 
   override def preStart = self ! "init"
 
   def receive = {
-    case "init" => startReceving
+    case "init" => startReceiving(queueName, listeningChannel, msgHandler)
     case _ => throw EvntScalaException.create("Unknown message")
   }
+}
 
-  def startReceving = {
+trait IAMQPListener {
+  def startReceiving(queueName: String, listeningChannel: Channel, msgHandler: ActorRef) = {
     val consumer = new QueueingConsumer(listeningChannel)
     listeningChannel.basicConsume(queueName, false, consumer)
     listeningChannel.basicQos(20)

@@ -8,6 +8,7 @@ import com.typesafe.config.{ ConfigValueFactory, ConfigFactory }
 import scala.collection.JavaConversions._
 import com.kufli.ec2._
 import com.kufli.log.Logging
+import java.io.File
 
 object AkkaConfig extends Logging {
 
@@ -20,7 +21,6 @@ object AkkaConfig extends Logging {
   }
 
   private val local = sys.props.get("akka.port").isDefined
-
   val (host, siblings, port) =
     if (local) {
       log.debug("Running with local configuration")
@@ -30,7 +30,7 @@ object AkkaConfig extends Logging {
       (ec2.currentIp, ec2.siblingIps, "2551")
     }
 
-  val seeds = siblings map (ip => s"akka.tcp://akka-ec2@$ip:2551")
+  val seeds = siblings map (ip => s"akka.tcp://evntScala@$ip:2551")
 
   private val overrideConfig =
     ConfigFactory.empty()
@@ -39,6 +39,5 @@ object AkkaConfig extends Logging {
       .withValue("akka.cluster.seed-nodes", ConfigValueFactory.fromIterable(seeds))
 
   private val defaults = ConfigFactory.load()
-
   val config = overrideConfig withFallback defaults
 }

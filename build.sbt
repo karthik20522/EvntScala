@@ -1,3 +1,8 @@
+import sbtassembly.Plugin._
+import sbtassembly.Plugin.AssemblyKeys._
+
+assemblySettings
+
 organization := "com.kufli"
 
 name := "EvntScala"
@@ -35,3 +40,7 @@ libraryDependencies ++= {
   	"com.amazonaws" % "aws-java-sdk" % "1.7.8"
   )
 }
+
+jarName in assembly := "EvntScala.jar"
+
+mainClass in assembly := Some("com.kufli.EvntScala")
