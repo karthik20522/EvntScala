@@ -4,8 +4,9 @@ import akka.actor._
 import com.rabbitmq.client.{ QueueingConsumer, Channel }
 import com.kufli.common.ReceiveLogger
 import com.kufli.common.EvntScalaException
+import com.kufli.common.Logging
 
-class AMQPListenerActor(queueName: String, listeningChannel: Channel, msgHandler: ActorRef) extends Actor with ActorLogging {
+class AMQPListenerActor(queueName: String, listeningChannel: Channel, msgHandler: ActorRef) extends Actor with Logging {
 
   override def preStart = self ! "init"
 
@@ -19,12 +20,10 @@ class AMQPListenerActor(queueName: String, listeningChannel: Channel, msgHandler
     listeningChannel.basicConsume(queueName, false, consumer)
     listeningChannel.basicQos(20)
 
-    log.debug("Listening to MQ")
-
     while (true) {
       val delivery = consumer.nextDelivery()
       val msg = new String(delivery.getBody())
-      msgHandler ! MQMessage(delivery.getEnvelope().getDeliveryTag(), msg)
+      msgHandler ! MQMessage(MessageProperties(delivery.getProperties, delivery.getEnvelope().getDeliveryTag()), msg)
     }
   }
 }

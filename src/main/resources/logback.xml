@@ -1,0 +1,13 @@
+<configuration>
+
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+        <pattern>%-5level %d{ISO8601} %class %c: %m%n</pattern>
+    </encoder>
+    <target>System.out</target>
+  </appender>
+
+  <root level="debug">
+    <appender-ref ref="console" />
+  </root>
+</configuration>

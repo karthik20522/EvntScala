@@ -6,11 +6,14 @@ import com.kufli.handler.MessageHandlerActor
 import com.kufli.amqp._
 import com.kufli.db.DBConnection
 import scala.util.Try
+import com.kufli.common.Logging
 
-object EvntScala extends App {
+object EvntScala extends App with Logging {
   sys addShutdownHook (shutdown)
 
   override def main(args: Array[String]) {
+    log.debug("HELLO WORLD")
+    println("HELLLLLLL PRINTLN")
     val system = ActorSystem("evntScala")
 
     val amqpChannel = AMQPConnection.getConnection().createChannel()

@@ -5,8 +5,9 @@ import com.rabbitmq.client.{ QueueingConsumer, Channel }
 import akka.event.LoggingReceive
 import com.kufli.common.ReceiveLogger
 import com.kufli.common.EvntScalaException
+import com.kufli.common.Logging
 
-class AMQPSenderActor(exchangeName: String, routingKey: String, sendingChannel: Channel) extends Actor with ActorLogging with ReceiveLogger {
+class AMQPSenderActor(exchangeName: String, routingKey: String, sendingChannel: Channel) extends Actor with ReceiveLogger with Logging {
 
   def receive = logMessage orElse {
     case deliveryTag: Long => sendingChannel.basicAck(deliveryTag, false)

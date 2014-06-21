@@ -4,6 +4,7 @@ import com.typesafe.config.ConfigFactory
 import com.github.mauricio.async.db.Configuration
 import com.github.mauricio.async.db.mysql.pool.MySQLConnectionFactory
 import com.github.mauricio.async.db.pool._
+import com.kufli.common.Logging
 
 object DBConnection {
   private val config = ConfigFactory.load().getConfig("db")
@@ -19,5 +20,7 @@ object DBConnection {
 
   lazy val messagesRepository = new MessageRepository(pool)
 
-  def close = pool.close
+  def close = pool match {
+    case x if (x != null) => pool.close
+  }
 }
