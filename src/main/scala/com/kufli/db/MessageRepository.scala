@@ -19,7 +19,7 @@ import com.github.mauricio.async.db.util.ExecutorServiceUtils.CachedExecutionCon
 object MessageRepository {
   val Insert = "INSERT INTO messages (guid, id, content,timestamp) VALUES (?,?,?,?)"
   val Update = "UPDATE messages SET content = ?, moment = ? WHERE guid = ?"
-  val SelectOne = "SELECT id, content, moment FROM messages WHERE id = ?"
+  val SelectOne = "SELECT id, content, timestamp FROM messages WHERE id = ?"
 }
 
 class MessageRepository(pool: Connection) {

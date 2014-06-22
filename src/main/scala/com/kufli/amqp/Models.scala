@@ -1,6 +1,7 @@
 package com.kufli.amqp
 
 import com.rabbitmq.client.AMQP
+import scala.collection.JavaConversions._
 
 case class MQMessage(messageProperties: MessageProperties, data: String)
 case class Ack(deliveryTag: Long)
@@ -22,7 +23,7 @@ object MessageProperties {
     MessageProperties(
       contentType = props.getContentType(),
       contentEncoding = props.getContentEncoding(),
-      headers = null,
+      headers = props.getHeaders().toMap,
       priority = integer2int(props.getPriority(), 0),
       correlationId = props.getCorrelationId(),
       replyTo = props.getReplyTo(),

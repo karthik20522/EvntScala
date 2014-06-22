@@ -7,6 +7,7 @@ import com.kufli.log.Logging
 import com.kufli.cluster.BroadcastActor
 import akka.actor.{ PoisonPill, ActorSystem, Props }
 import akka.contrib.pattern.ClusterSingletonManager
+import com.kufli.handler.MessageHandlerActor
 
 object EvntScala extends App with Logging {
   val system = ActorSystem("evntScala", AkkaConfig.config)
@@ -18,4 +19,5 @@ object EvntScala extends App with Logging {
     role = None)
 
   system.actorOf(clusterSingletonProperties, "clusterSingleton")
+  system.actorOf(Props(new MessageHandlerActor), name = "messageHandler")
 }
