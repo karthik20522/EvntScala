@@ -6,11 +6,11 @@ import org.json4s.JsonAST.{ JArray, JObject, JValue }
 import org.json4s.native._
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
-
 import akka.actor.{ ActorLogging, Actor }
 import com.typesafe.config.ConfigFactory
 import scala.util.{ Success, Failure }
 import com.kufli.JsonSupport
+import com.kufli.common.EvntScalaException
 
 class ElasticsearchActor extends Actor with JsonSupport {
 
@@ -30,7 +30,7 @@ class ElasticsearchActor extends Actor with JsonSupport {
         case Success(response) =>
           originalSender ! "OK"
         case Failure(ex) =>
-          throw new Exception(ex)
+          throw EvntScalaException.create("Error while indexing Elasticsearch", ex)
       }
     }
     case Query(indexName, typeName, query) => {
@@ -42,7 +42,7 @@ class ElasticsearchActor extends Actor with JsonSupport {
           val objects = extractSourceObjects(response)
           originalSender ! Response(objects)
         case Failure(ex) =>
-          throw new Exception(ex)
+          throw EvntScalaException.create("Error while querying Elasticsearch", ex)
       }
     }
   }

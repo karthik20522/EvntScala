@@ -14,7 +14,7 @@ class AMQPListenerActor(queueName: String, listeningChannel: Channel) extends Ac
   }
 }
 
-trait IAMQPListener extends Logging { actor: Actor =>
+trait IAMQPListener { actor: Actor =>
   def startReceiving(queueName: String, listeningChannel: Channel, msgHandler: ActorRef) = {
     val consumer = new QueueingConsumer(listeningChannel)
     listeningChannel.basicConsume(queueName, true, consumer)
