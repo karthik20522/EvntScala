@@ -4,6 +4,7 @@
 # sbt specific
 .cache/
 .history/
+.settings/
 .lib/
 dist/*
 target/
