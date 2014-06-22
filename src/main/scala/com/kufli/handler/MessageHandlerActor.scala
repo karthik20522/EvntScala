@@ -8,11 +8,11 @@ import com.kufli.log.ReceiveLogger
 import com.kufli.common.EvntScalaException
 import com.kufli.log.Logging
 
-class MessageHandlerActor(amqpAckActor: ActorRef) extends Actor with ReceiveLogger with Logging {
+class MessageHandlerActor extends Actor with ReceiveLogger with Logging {
 
   def receive = logMessage orElse {
     case msg: MQMessage => {
-      amqpAckActor ! msg.messageProperties.deliveryTag
+      log.info(msg.toString())
     }
     case _ => throw EvntScalaException.create("Unknown message type")
   }

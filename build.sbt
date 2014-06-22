@@ -26,6 +26,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-actor" % akkaV,
     "com.typesafe.akka" %% "akka-cluster" % akkaV,
     "com.typesafe.akka" %% "akka-testkit" % akkaV,
+    "com.typesafe.akka" %% "akka-contrib" % akkaV,
     "io.spray" % "spray-client" % sprayVersion,    
     "io.spray" % "spray-util" % sprayVersion,
     "org.specs2" %% "specs2" % "2.3.12" % "test",
