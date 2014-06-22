@@ -33,6 +33,14 @@ object AMQPConnection {
     }
   }
 
+  def getChannel(exchangeName: String, queueName: String, routingKey: String): Channel = {
+    val amqpChannel = getConnection().createChannel()
+    amqpChannel.exchangeDeclare(exchangeName, "direct", true);
+    amqpChannel.queueDeclare(queueName, true, false, false, null)
+    amqpChannel.queueBind(queueName, exchangeName, routingKey)
+    amqpChannel
+  }
+
   def close = connection match {
     case x if (x != null) => connection.close
   }

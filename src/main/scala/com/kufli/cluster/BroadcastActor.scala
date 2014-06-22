@@ -12,17 +12,9 @@ import com.kufli.log.ReceiveLogger
 import com.kufli.log.Logging
 import com.kufli.amqp.MQMessage
 
-case class Message(message: String)
-
-class BroadcastActor extends Actor with ReceiveLogger with Logging {
+class BroadcastActor extends IBroadcast with Actor with ReceiveLogger with Logging {
 
   private val cluster = Cluster(context.system)
-  private var members = Set.empty[Member]
-  private val amqpChannel = AMQPConnection.getConnection().createChannel()
-  amqpChannel.exchangeDeclare("evntEx", "direct", true);
-  amqpChannel.queueDeclare("evntQ", true, false, false, null)
-  amqpChannel.queueBind("evntQ", "evntEx", "public.evnt.scala")
-  private val amqpListener = context.actorOf(Props(new AMQPListenerActor("evntQ", amqpChannel)), name = "amqpListener")
 
   override def preStart(): Unit = {
     cluster.subscribe(
@@ -37,24 +29,26 @@ class BroadcastActor extends Actor with ReceiveLogger with Logging {
   override def postStop(): Unit = cluster.unsubscribe(self)
 
   def receive = logMessage orElse {
-
-    case "init" => amqpListener ! "init"
-
+    case "init" => startConsuming
     case mqMessage: MQMessage => log.info(s">>>>>>>><<<<<< Message from [${sender().path.toString}] : [${mqMessage.toString}]")
-
-    case Message(content) =>
-      members foreach (pathOf(_) ! content)
-
-    case MemberUp(member) =>
-      members += member
-
-    case MemberRemoved(member, previousStatus) =>
-      members.find(_.address == member.address) foreach (members -= _)
-
+    case MemberUp(member) => addMember(member)
+    case MemberRemoved(member, previousStatus) => removeMember(member)
     case _: MemberEvent => // ignore
   }
+}
 
-  private def pathOf(member: Member) = {
-    context.actorSelection(RootActorPath(member.address) / "user" / self.path.name)
+trait IBroadcast { actor: Actor =>
+
+  private var members = Set.empty[Member]
+  private val amqpChannel = AMQPConnection.getChannel("evntEx", "evntQ", "public.evnt.scala")
+
+  def startConsuming = {
+    val amqpListener = context.actorOf(Props(new AMQPListenerActor("evntQ", amqpChannel)), name = "amqpListener")
+    amqpListener ! "init"
   }
+
+  def addMember(member: Member) = members += member
+  def removeMember(member: Member) = members.find(_.address == member.address) foreach (members -= _)
+  def pathOf(member: Member) = context.actorSelection(RootActorPath(member.address) / "user" / self.path.name)
+
 }
